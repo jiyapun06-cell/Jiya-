@@ -1,225 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎀 Coquette Photo Studio 🎀</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,600&family=Sneaks&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coquette Photo Booth 🎀</title>
 
-        :root {
-            --soft-pink: #fce4ec;
-            --rose: #f8bbd0;
-            --cream: #fffaf0;
-            --ribbon-red: #d81b60;
-            --border-style: 8px double #f8bbd0;
-        }
+<style>
 
-        body {
-            background-color: var(--soft-pink);
-            /* Soft vintage pattern */
-            background-image: radial-gradient(#f8bbd0 0.5px, transparent 0.5px);
-            background-size: 20px 20px;
-            font-family: 'Playfair Display', serif;
-            color: #5d4037;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: "Comic Sans MS", cursive;
+}
 
-        h1 {
-            font-style: italic;
-            font-weight: 400;
-            font-size: 3rem;
-            margin-bottom: 10px;
-            color: var(--ribbon-red);
-        }
+body{
+background:linear-gradient(135deg,#ffd6ec,#ffe9f3,#ffc8dd);
+overflow-x:hidden;
+color:#444;
+}
 
-        .subtitle {
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-        }
+/* SPARKLES */
 
-        .booth-outer {
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: var(--border-style);
-            position: relative;
-        }
+.sparkle{
+position:fixed;
+width:6px;
+height:6px;
+background:white;
+border-radius:50%;
+opacity:0.8;
+animation:sparkle 5s linear infinite;
+}
 
-        /* Decorative bows using CSS */
-        .booth-outer::before, .booth-outer::after {
-            content: '🎀';
-            position: absolute;
-            font-size: 2rem;
-            top: -20px;
-        }
-        .booth-outer::before { left: -10px; }
-        .booth-outer::after { right: -10px; }
+@keyframes sparkle{
+0%{transform:translateY(-10px) scale(0);}
+50%{transform:translateY(50vh) scale(1);}
+100%{transform:translateY(100vh) scale(0);}
+}
 
-        .video-container {
-            position: relative;
-            background: #eee;
-            line-height: 0;
-            overflow: hidden;
-            border-radius: 4px;
-        }
+/* FLOATING BOWS */
 
-        video {
-            width: 100%;
-            max-width: 500px;
-            transform: scaleX(-1);
-            filter: sepia(0.1) contrast(1.1) brightness(1.05); /* Soft vintage filter */
-        }
+.bow{
+position:fixed;
+font-size:25px;
+animation:float 12s linear infinite;
+}
 
-        .controls {
-            margin-top: 30px;
-        }
+@keyframes float{
+0%{transform:translateY(-10vh) rotate(0deg);}
+100%{transform:translateY(110vh) rotate(360deg);}
+}
 
-        #snap-btn {
-            background-color: white;
-            border: 2px solid var(--rose);
-            color: var(--ribbon-red);
-            padding: 12px 40px;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            font-style: italic;
-            cursor: pointer;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(248, 187, 208, 0.4);
-        }
+/* NAVBAR */
 
-        #snap-btn:hover {
-            background-color: var(--rose);
-            color: white;
-            transform: translateY(-2px);
-        }
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 40px;
+background:rgba(255,255,255,0.7);
+backdrop-filter:blur(10px);
+position:sticky;
+top:0;
+z-index:10;
+}
 
-        .gallery {
-            margin-top: 50px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 25px;
-            width: 100%;
-            max-width: 900px;
-        }
+nav h1{
+color:#ff4fa3;
+}
 
-        .gallery-item {
-            background: white;
-            padding: 10px 10px 30px 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transform: rotate(-2deg);
-            transition: transform 0.3s ease;
-        }
+nav a{
+text-decoration:none;
+margin-left:20px;
+font-weight:bold;
+color:#ff4fa3;
+}
 
-        .gallery-item:nth-child(even) {
-            transform: rotate(3deg);
-        }
+nav a:hover{
+color:#ff79c6;
+}
 
-        .gallery-item:hover {
-            transform: rotate(0deg) scale(1.05);
-            z-index: 5;
-        }
+/* HERO */
 
-        .gallery img {
-            width: 100%;
-            display: block;
-        }
+.hero{
+height:90vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
 
-        canvas { display: none; }
+.hero h2{
+font-size:60px;
+color:#ff4fa3;
+}
 
-        .flash {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: white;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 100;
-        }
+.hero p{
+margin:15px;
+font-size:20px;
+}
 
-        @keyframes trigger-flash {
-            0% { opacity: 0.8; }
-            100% { opacity: 0; }
-        }
-    </style>
+.btn{
+background:#ff4fa3;
+color:white;
+padding:12px 28px;
+border-radius:25px;
+text-decoration:none;
+font-weight:bold;
+box-shadow:0 5px 15px rgba(255,0,150,0.3);
+}
+
+.btn:hover{
+background:#ff79c6;
+}
+
+/* PHOTO FRAME */
+
+.frame-section{
+display:flex;
+justify-content:center;
+padding:60px 20px;
+}
+
+.frame{
+background:white;
+padding:20px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+width:260px;
+}
+
+.frame img{
+width:100%;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+/* FEATURES */
+
+.features{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:25px;
+padding:40px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+}
+
+.card h3{
+color:#ff4fa3;
+}
+
+/* FOOTER */
+
+footer{
+margin-top:50px;
+padding:20px;
+background:#ffb3d6;
+text-align:center;
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="flash" id="flash"></div>
-    
-    <h1>La Rêverie</h1>
-    <div class="subtitle">✨ capture your loveliest moments ✨</div>
+<!-- FLOATING BOWS -->
+<div class="bow" style="left:10%; animation-delay:0s;">🎀</div>
+<div class="bow" style="left:30%; animation-delay:3s;">🎀</div>
+<div class="bow" style="left:60%; animation-delay:5s;">🎀</div>
+<div class="bow" style="left:80%; animation-delay:2s;">🎀</div>
 
-    <div class="booth-outer">
-        <div class="video-container">
-            <video id="video" autoplay playsinline></video>
-        </div>
-    </div>
+<!-- SPARKLES -->
+<div class="sparkle" style="left:20%; animation-delay:1s;"></div>
+<div class="sparkle" style="left:50%; animation-delay:2s;"></div>
+<div class="sparkle" style="left:70%; animation-delay:4s;"></div>
+<div class="sparkle" style="left:40%; animation-delay:3s;"></div>
 
-    <div class="controls">
-        <button id="snap-btn">capture a memory 🎀</button>
-    </div>
+<nav>
+<h1>🎀 Coquette Booth</h1>
 
-    <canvas id="canvas" width="640" height="480"></canvas>
+<div>
+<a href="#">Home</a>
+<a href="#">Gallery</a>
+<a href="#">Packages</a>
+<a href="#">Book</a>
+</div>
+</nav>
 
-    <div class="gallery" id="gallery"></div>
+<section class="hero">
 
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const snapBtn = document.getElementById('snap-btn');
-        const gallery = document.getElementById('gallery');
-        const flash = document.getElementById('flash');
+<h2>Pretty Pink Photo Booth</h2>
+<p>Capture cute memories with bows, sparkles & coquette vibes ✨</p>
 
-        async function initCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                video.srcObject = stream;
-            } catch (err) {
-                alert("Please enable camera access for the coquette studio!");
-            }
-        }
+<a class="btn">Book a Session</a>
 
-        snapBtn.addEventListener('click', () => {
-            flash.style.animation = 'none';
-            flash.offsetHeight; 
-            flash.style.animation = 'trigger-flash 0.4s ease-out';
+</section>
 
-            const context = canvas.getContext('2d');
-            context.translate(640, 0);
-            context.scale(-1, 1);
-            
-            // Add a soft pink overlay to the capture
-            context.drawImage(video, 0, 0, 640, 480);
-            context.setTransform(1, 0, 0, 1, 0, 0); 
-            
-            context.fillStyle = "rgba(252, 228, 236, 0.1)";
-            context.fillRect(0, 0, 640, 480);
+<section class="frame-section">
 
-            const data = canvas.toDataURL('image/png');
-            
-            // Create a Polaroid-style frame
-            const container = document.createElement('div');
-            container.className = 'gallery-item';
-            
-            const img = document.createElement('img');
-            img.src = data;
-            
-            container.appendChild(img);
-            gallery.prepend(container);
-        });
+<div class="frame">
+<img src="https://picsum.photos/200?1">
+<img src="https://picsum.photos/200?2">
+<img src="https://picsum.photos/200?3">
+<img src="https://picsum.photos/200?4">
+</div>
 
-        initCamera();
-    </script>
+</section>
+
+<section class="features">
+
+<div class="card">
+<h3>🎀 Cute Props</h3>
+<p>Bows, pearls, hearts & aesthetic accessories.</p>
+</div>
+
+<div class="card">
+<h3>📸 HD Photos</h3>
+<p>High quality photos with instant prints.</p>
+</div>
+
+<div class="card">
+<h3>✨ Custom Frames</h3>
+<p>Choose adorable coquette photo layouts.</p>
+</div>
+
+<div class="card">
+<h3>💌 Instant Sharing</h3>
+<p>Send your photos directly to your phone.</p>
+</div>
+
+</section>
+
+<footer>
+<p>💗 Coquette Photo Booth — Made with bows & sparkles ✨</p>
+</footer>
+
 </body>
 </html>
-
-
